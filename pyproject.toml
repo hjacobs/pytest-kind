@@ -3,6 +3,15 @@ name = "pytest-kind"
 version = "0.1.0"
 description = "Kubernetes test support with KIND for pytest"
 authors = ["Henning Jacobs <henning@jacobs1.de>"]
+license = "GPL-3.0+"
+readme = "README.md"
+repository = "https://codeberg.org/hjacobs/pytest-kind"
+classifiers = [
+    "Framework :: Pytest"
+]
+
+[tool.poetry.plugins.pytest11]
+pytest-kind = "pytest_kind.pytest_kind"
 
 [tool.poetry.dependencies]
 python = "^3.7"
