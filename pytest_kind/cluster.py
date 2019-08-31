@@ -126,11 +126,16 @@ class KindCluster:
 
     @contextmanager
     def port_forward(
-        self, service_or_pod_name: str, remote_port: int, *args, local_port=None
+        self,
+        service_or_pod_name: str,
+        remote_port: int,
+        *args,
+        local_port: int = None,
+        retries: int = 10,
     ):
         if not local_port:
             local_port = 38080
-        for i in range(20):
+        for i in range(retries):
             proc = subprocess.Popen(
                 [
                     str(self.kubectl_path),
@@ -141,16 +146,26 @@ class KindCluster:
                 ],
                 env={"KUBECONFIG": str(self.kubeconfig_path)},
             )
-            time.sleep((i + 1) * 0.2)
+            time.sleep(0.5)
+            returncode = proc.poll()
+            if returncode is not None:
+                if i >= retries - 1:
+                    raise Exception(
+                        f"kubectl port-forward returned exit code {returncode}"
+                    )
+                else:
+                    # try again
+                    proc.kill()
+                    local_port += 1
+                    continue
             s = socket.socket()
             try:
                 s.connect(("127.0.0.1", local_port))
             except:
-                if i >= 9:
+                if i >= retries - 1:
                     raise
                 proc.kill()
                 local_port += 1
-                time.sleep((i + 1) * 0.5)
             finally:
                 s.close()
         try:

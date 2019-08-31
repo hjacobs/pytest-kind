@@ -16,7 +16,8 @@ def test_kind_cluster(testdir):
         kind_cluster.load_docker_image("busybox")
 
     def test_port_forward(kind_cluster):
-        with kind_cluster.port_forward("service/kube-dns", 53, "-n", "kube-system") as port:
+        # high number of retries as pod is pending for a while..
+        with kind_cluster.port_forward("service/kube-dns", 53, "-n", "kube-system", retries=100) as port:
             assert port >= 38080
             s = socket.socket()
             try:
