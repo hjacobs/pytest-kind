@@ -2,6 +2,9 @@
 
 Test your Python Kubernetes app/operator end-to-end with [kind](https://kind.sigs.k8s.io/) and [pytest](https://pytest.org).
 
+`pytest-kind` is a plugin for pytest which provides the `kind_cluster` fixture.
+The fixture will install kind, create a cluster, and provide convenience functionality such as port forwarding.
+
 ## Usage
 
 Install `pytest-kind` via pip or via poetry, e.g.:

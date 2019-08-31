@@ -130,24 +130,27 @@ class KindCluster:
     ):
         if not local_port:
             local_port = 38080
-        proc = subprocess.Popen(
-            [
-                str(self.kubectl_path),
-                "port-forward",
-                service_or_pod_name,
-                f"{local_port}:{remote_port}",
-                *args,
-            ],
-            env={"KUBECONFIG": str(self.kubeconfig_path)},
-        )
-        for i in range(10):
-            time.sleep(0.1)
+        for i in range(20):
+            proc = subprocess.Popen(
+                [
+                    str(self.kubectl_path),
+                    "port-forward",
+                    service_or_pod_name,
+                    f"{local_port}:{remote_port}",
+                    *args,
+                ],
+                env={"KUBECONFIG": str(self.kubeconfig_path)},
+            )
+            time.sleep((i + 1) * 0.2)
             s = socket.socket()
             try:
                 s.connect(("127.0.0.1", local_port))
             except:
                 if i >= 9:
                     raise
+                proc.kill()
+                local_port += 1
+                time.sleep((i + 1) * 0.5)
             finally:
                 s.close()
         try:

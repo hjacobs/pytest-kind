@@ -16,8 +16,8 @@ def test_kind_cluster(testdir):
         kind_cluster.load_docker_image("busybox")
 
     def test_port_forward(kind_cluster):
-        with kind_cluster.port_forward("service/kubernetes", 443, "-n", "kube-system") as port:
-            assert port == 38080
+        with kind_cluster.port_forward("service/kube-dns", 53, "-n", "kube-system") as port:
+            assert port >= 38080
             s = socket.socket()
             try:
                 s.connect(('127.0.0.1', port))
