@@ -2,3 +2,5 @@ dist/
 *.pyc
 *.swp
 .coverage
+*.egg-info
+fake-download
