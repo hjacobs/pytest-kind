@@ -44,7 +44,7 @@ def test_myapp(kind_cluster):
         assert r.text == "Hello world!"
 ```
 
-See the `examples` directory for sample projects.
+See the `examples` directory for sample projects and also check out [kube-web-view](https://codeberg.org/hjacobs/kube-web-view) which uses pytest-kind for its e2e tests.
 
 ## Pytest Options
 
