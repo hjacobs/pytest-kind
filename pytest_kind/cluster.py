@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 KIND_VERSION = "v0.5.1"
+KUBECTL_VERSION = "v1.15.0"
 
 
 class KindCluster:
@@ -38,6 +39,24 @@ class KindCluster:
                             fd.write(chunk)
             tmp_file.chmod(0o755)
             tmp_file.rename(self.kind_path)
+
+    def ensure_kubectl(self):
+        if not self.kubectl_path.exists():
+            osname = sys.platform  # "linux" or "darwin"
+            url = os.getenv(
+                "KUBECTL_DOWNLOAD_URL",
+                f"https://storage.googleapis.com/kubernetes-release/release/{KUBECTL_VERSION}/bin/{osname}/amd64/kubectl",
+            )
+            logging.info(f"Downloading {url}..")
+            tmp_file = self.kubectl_path.with_suffix(".tmp")
+            with requests.get(url, stream=True) as r:
+                r.raise_for_status()
+                with tmp_file.open("wb") as fd:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        if chunk:
+                            fd.write(chunk)
+            tmp_file.chmod(0o755)
+            tmp_file.rename(self.kubectl_path)
 
     def create(self):
         self.ensure_kind()
@@ -94,10 +113,11 @@ class KindCluster:
         )
 
     def kubectl(self, *args: str, **kwargs):
-        return run(
+        self.ensure_kubectl()
+        return subprocess.check_output(
             [str(self.kubectl_path), *args],
-            check=True,
             env={"KUBECONFIG": str(self.kubeconfig_path)},
+            encoding="utf-8",
             **kwargs,
         )
 
