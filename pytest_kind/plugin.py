@@ -1,3 +1,4 @@
+import logging
 import os
 import pykube
 import pytest
@@ -6,6 +7,9 @@ import subprocess
 import sys
 
 from pathlib import Path
+
+
+KIND_VERSION = "v0.5.1"
 
 
 class KindCluster:
@@ -22,8 +26,9 @@ class KindCluster:
             osname = sys.platform  # "linux" or "darwin"
             url = os.getenv(
                 "KIND_DOWNLOAD_URL",
-                f"https://github.com/kubernetes-sigs/kind/releases/download/v0.5.1/kind-{osname}-amd64",
+                f"https://github.com/kubernetes-sigs/kind/releases/download/{KIND_VERSION}/kind-{osname}-amd64",
             )
+            logging.info(f"Downloading {url}..")
             tmp_file = self.kind_path.with_suffix(".tmp")
             with requests.get(url, stream=True) as r:
                 r.raise_for_status()
@@ -46,16 +51,17 @@ class KindCluster:
                 cluster_exists = True
 
         if not cluster_exists:
+            logging.info(f"Creating cluster {self.name}..")
             subprocess.run(
                 [str(self.kind_path), "create", "cluster", f"--name={self.name}"],
                 check=True,
             )
-        kubeconfig_path = subprocess.check_output(
+        self.kubeconfig_path = subprocess.check_output(
             [str(self.kind_path), "get", "kubeconfig-path", f"--name={self.name}"],
             encoding="utf-8",
         ).strip()
 
-        config = pykube.KubeConfig.from_file(kubeconfig_path)
+        config = pykube.KubeConfig.from_file(self.kubeconfig_path)
         self.api = pykube.HTTPClient(config)
 
     def delete(self):
