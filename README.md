@@ -1,5 +1,8 @@
 # pytest-kind
 
+![PyPI](https://img.shields.io/pypi/v/pytest-kind)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pytest-kind)
+
 Test your Python Kubernetes app/operator end-to-end with [kind](https://kind.sigs.k8s.io/) and [pytest](https://pytest.org).
 
 `pytest-kind` is a plugin for pytest which provides the `kind_cluster` fixture.
