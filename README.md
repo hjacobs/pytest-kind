@@ -15,14 +15,14 @@ poetry add --dev pytest-kind
 
 Write your pytest functions and use the provided `kind_cluster` fixture, e.g.:
 
-```
+```python
 def test_kubernetes_version(kind_cluster):
     assert kind_cluster.api.version == ('1', '15')
 ```
 
 To load your custom Docker image and apply deployment manifests:
 
-```
+```python
 from pykube import Pod
 
 def test_myapp(kind_cluster):
@@ -33,6 +33,11 @@ def test_myapp(kind_cluster):
     # using Pykube to query pods
     for pod in Pod.objects(kind_cluster.api).filter(selector="app=myapp"):
         assert "Sucessfully started" in pod.logs()
+
+    with kind_cluster.port_forward("service/myapp", 80) as port:
+        r = requests.get(f"http://localhost:{port}/hello/world")
+        r.raise_for_status()
+        assert r.text == "Hello world!"
 ```
 
 See the `examples` directory for sample projects.
