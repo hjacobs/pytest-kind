@@ -1,0 +1,20 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aiohttp-helloworld
+  labels:
+    application: aiohttp-helloworld
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: aiohttp-helloworld
+  template:
+    metadata:
+      labels:
+        application: aiohttp-helloworld
+    spec:
+      containers:
+        - name: mycontainer
+          image: aiohttp-helloworld
