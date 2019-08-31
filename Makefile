@@ -18,6 +18,5 @@ test:
 .PHONY: test.local
 test.local:
 	poetry run python3 -m http.server --directory fake-download 8000 &
-	KIND_DOWNLOAD_URL=http://localhost:8000/kind poetry run coverage run --source=pytest_kind -m py.test
+	KIND_DOWNLOAD_URL=http://localhost:8000/kind poetry run coverage run --source=pytest_kind -m py.test -v
 	poetry run coverage report
-	kill %1

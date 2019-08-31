@@ -6,5 +6,5 @@ def test_kind_cluster(testdir):
     """
     )
 
-    result = testdir.runpytest()
+    result = testdir.runpytest("--cluster-name", "pytest-kind-test-plugin")
     result.assert_outcomes(passed=1)
