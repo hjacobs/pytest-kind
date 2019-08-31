@@ -4,4 +4,5 @@ docker:
 
 .PHONY: test
 test: docker
+	poetry install
 	poetry run pytest --cluster-name=aiohttp-helloworld
