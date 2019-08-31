@@ -11,7 +11,7 @@ from pathlib import Path
 from .cluster import KindCluster
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def kind_cluster(request):
     name = request.config.getoption("cluster_name")
     keep = request.config.getoption("keep_cluster")
