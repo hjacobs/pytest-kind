@@ -6,7 +6,7 @@
 Test your Python Kubernetes app/operator end-to-end with [kind](https://kind.sigs.k8s.io/) and [pytest](https://pytest.org).
 
 `pytest-kind` is a plugin for pytest which provides the `kind_cluster` fixture.
-The fixture will install kind, create a cluster, and provide convenience functionality such as port forwarding.
+The fixture will install kind 0.5.1, create a Kubernetes 1.15 cluster, and provide convenience functionality such as port forwarding.
 
 ## Usage
 
@@ -51,3 +51,8 @@ See the `examples` directory for sample projects.
 The kind cluster name can be set via the `--cluster-name` CLI option.
 
 The kind cluster is deleted after each pytest session, you can keep the cluster by passing `--keep-cluster` to pytest.
+
+## Notes
+
+* The `kind` and `kubectl` binaries will be downloaded once to the local directory `./.pytest-kind/{cluster-name}/`. You can use them to interact with the cluster (e.g. when `--keep-cluster` is used).
+* Some cluster pods might not be ready immediately (e.g. kind's CoreDNS take a moment), add wait/poll functionality as required to make your tests predictable.
