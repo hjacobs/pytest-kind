@@ -32,6 +32,8 @@ def test_myapp(kind_cluster):
         assert "Sucessfully started" in pod.logs()
 ```
 
+See the `examples` directory for sample projects.
+
 ## Pytest Options
 
 The kind cluster name can be set via the `--cluster-name` CLI option.

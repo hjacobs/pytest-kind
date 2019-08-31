@@ -3,8 +3,11 @@ import os
 import pykube
 import pytest
 import requests
+import socket
 import subprocess
 import sys
+import time
+from contextlib import contextmanager
 
 from pathlib import Path
 
@@ -121,7 +124,39 @@ class KindCluster:
             **kwargs,
         )
 
+    @contextmanager
+    def port_forward(
+        self, service_or_pod_name: str, remote_port: int, *args, local_port=None
+    ):
+        if not local_port:
+            local_port = 38080
+        proc = subprocess.Popen(
+            [
+                str(self.kubectl_path),
+                "port-forward",
+                service_or_pod_name,
+                f"{local_port}:{remote_port}",
+                *args,
+            ],
+            env={"KUBECONFIG": str(self.kubeconfig_path)},
+        )
+        for i in range(10):
+            time.sleep(0.1)
+            s = socket.socket()
+            try:
+                s.connect(("127.0.0.1", local_port))
+            except:
+                if i >= 9:
+                    raise
+            finally:
+                s.close()
+        try:
+            yield local_port
+        finally:
+            proc.kill()
+
     def delete(self):
+        logging.info(f"Deleting cluster {self.name}..")
         subprocess.run(
             [str(self.kind_path), "delete", "cluster", f"--name={self.name}"],
             check=True,
