@@ -10,7 +10,7 @@ The fixture will install kind 0.5.1, create a Kubernetes 1.15 cluster, and provi
 
 ## Usage
 
-Install `pytest-kind` via pip or via poetry, e.g.:
+Install `pytest-kind` via pip or via [poetry](https://poetry.eustace.io/), e.g.:
 
 ```
 poetry add --dev pytest-kind
@@ -54,5 +54,6 @@ The kind cluster is deleted after each pytest session, you can keep the cluster 
 
 ## Notes
 
+* The `kind_cluster` fixture is session-scoped, i.e. the same cluster will be used across all test modules/functions.
 * The `kind` and `kubectl` binaries will be downloaded once to the local directory `./.pytest-kind/{cluster-name}/`. You can use them to interact with the cluster (e.g. when `--keep-cluster` is used).
 * Some cluster pods might not be ready immediately (e.g. kind's CoreDNS take a moment), add wait/poll functionality as required to make your tests predictable.
