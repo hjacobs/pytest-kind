@@ -2,6 +2,7 @@ import logging
 import os
 import pykube
 import pytest
+import random
 import requests
 import socket
 import subprocess
@@ -133,9 +134,16 @@ class KindCluster:
         local_port: int = None,
         retries: int = 10,
     ):
-        if not local_port:
-            local_port = 38080
+        if local_port:
+            fixed_local_port = local_port
+        else:
+            fixed_local_port = None
+        proc = None
         for i in range(retries):
+            if proc:
+                proc.kill()
+            # Linux epheremal port range starts at 32k
+            local_port = fixed_local_port or random.randrange(5000, 30000)
             proc = subprocess.Popen(
                 [
                     str(self.kubectl_path),
@@ -146,7 +154,7 @@ class KindCluster:
                 ],
                 env={"KUBECONFIG": str(self.kubeconfig_path)},
             )
-            time.sleep(0.5)
+            time.sleep(1)
             returncode = proc.poll()
             if returncode is not None:
                 if i >= retries - 1:
@@ -155,8 +163,6 @@ class KindCluster:
                     )
                 else:
                     # try again
-                    proc.kill()
-                    local_port += 1
                     continue
             s = socket.socket()
             try:
@@ -164,8 +170,6 @@ class KindCluster:
             except:
                 if i >= retries - 1:
                     raise
-                proc.kill()
-                local_port += 1
             finally:
                 s.close()
         try:

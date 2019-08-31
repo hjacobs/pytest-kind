@@ -1,6 +1,6 @@
 .PHONY: docker
 docker:
-	docker build -t aiohttp-helloworld .
+	docker build -t hjacobs/aiohttp-helloworld:latest .
 
 .PHONY: test
 test: docker

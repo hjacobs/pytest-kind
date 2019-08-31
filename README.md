@@ -26,6 +26,7 @@ def test_kubernetes_version(kind_cluster):
 To load your custom Docker image and apply deployment manifests:
 
 ```python
+import requests
 from pykube import Pod
 
 def test_myapp(kind_cluster):

@@ -1,4 +1,17 @@
 ---
+apiVersion: v1
+kind: Service
+metadata:
+    name: aiohttp-helloworld
+spec:
+    selector:
+        application: aiohttp-helloworld
+    type: ClusterIP
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,4 +30,9 @@ spec:
     spec:
       containers:
         - name: mycontainer
-          image: aiohttp-helloworld
+          image: hjacobs/aiohttp-helloworld:latest
+          imagePullPolicy: IfNotPresent  # For our E2E tests.
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
