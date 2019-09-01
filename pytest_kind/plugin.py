@@ -1,12 +1,4 @@
-import logging
-import os
-import pykube
 import pytest
-import requests
-import subprocess
-import sys
-
-from pathlib import Path
 
 from .cluster import KindCluster
 

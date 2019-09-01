@@ -1,7 +1,6 @@
 import logging
 import os
 import pykube
-import pytest
 import random
 import requests
 import socket
