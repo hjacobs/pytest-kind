@@ -62,6 +62,7 @@ class KindCluster:
             tmp_file.rename(self.kubectl_path)
 
     def create(self):
+        """Create the kind cluster if it does not exist (otherwise re-use)"""
         self.ensure_kind()
 
         cluster_exists = False
@@ -115,7 +116,8 @@ class KindCluster:
             check=True,
         )
 
-    def kubectl(self, *args: str, **kwargs):
+    def kubectl(self, *args: str, **kwargs) -> str:
+        """Run a kubectl command against the cluster and return the output as string"""
         self.ensure_kubectl()
         return subprocess.check_output(
             [str(self.kubectl_path), *args],
@@ -132,7 +134,8 @@ class KindCluster:
         *args,
         local_port: int = None,
         retries: int = 10,
-    ):
+    ) -> int:
+        """Run "kubectl port-forward" for the given service/pod and use a random local port"""
         if local_port:
             fixed_local_port = local_port
         else:
@@ -177,6 +180,7 @@ class KindCluster:
             proc.kill()
 
     def delete(self):
+        """Delete the kind cluster ("kind delete cluster")"""
         logging.info(f"Deleting cluster {self.name}..")
         subprocess.run(
             [str(self.kind_path), "delete", "cluster", f"--name={self.name}"],
