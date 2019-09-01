@@ -57,7 +57,7 @@ The `kind_cluster` fixture is an instance of the KindCluster class with the foll
 
 * `load_docker_image(docker_image)`: load the specified Docker image into the kind cluster
 * `kubectl(*args)`: run the `kubectl` binary against the cluster with the specified arguments. Returns the process output as string.
-* `port_forward(service_or_pod_name, remote_port, *args)`: run "kubectl port-forward" for the given service/pod and return the (random) local port. To be used as context manager ("with" statement).
+* `port_forward(service_or_pod_name, remote_port, *args)`: run "kubectl port-forward" for the given service/pod and return the (random) local port. To be used as context manager ("with" statement). Pass the namespace as additional args to kubectl via "-n", "mynamespace".
 
 KindCluster has the following attributes:
 
