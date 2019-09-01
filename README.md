@@ -1,7 +1,10 @@
 # pytest-kind
 
+[![Build Status](https://travis-ci.com/hjacobs/pytest-kind.svg?branch=master)](https://travis-ci.com/hjacobs/pytest-kind)
 ![PyPI](https://img.shields.io/pypi/v/pytest-kind)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pytest-kind)
+![License](https://img.shields.io/github/license/hjacobs/pytest-kind)
+![CalVer](https://img.shields.io/badge/calver-YY.MM.MICRO-22bfda.svg)
 
 Test your Python Kubernetes app/operator end-to-end with [kind](https://kind.sigs.k8s.io/) and [pytest](https://pytest.org).
 
