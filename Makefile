@@ -2,9 +2,6 @@
 poetry:
 	poetry install
 
-.PHONY: test
-test: poetry lint test
-
 .PHONY: lint
 lint: 
 	flake8
