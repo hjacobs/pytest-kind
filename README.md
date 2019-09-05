@@ -86,6 +86,13 @@ The kind cluster name can be set via the `--cluster-name` CLI option.
 
 The kind cluster is deleted after each pytest session, you can keep the cluster by passing `--keep-cluster` to pytest.
 
+Note that you can use the `PYTEST_ADDOPTS` environment variable to pass these options to pytest. This also works if you call pytest from a Makefile:
+
+```bash
+# for test debugging: don't delete the kind cluster
+PYTEST_ADDOPTS=--keep-cluster make test
+```
+
 
 ## Notes
 
