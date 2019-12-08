@@ -12,8 +12,8 @@ from contextlib import contextmanager
 from pathlib import Path
 
 
-KIND_VERSION = "v0.5.1"
-KUBECTL_VERSION = "v1.15.0"
+KIND_VERSION = "v0.6.1"
+KUBECTL_VERSION = "v1.16.3"
 
 
 class KindCluster:
