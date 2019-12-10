@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pytest-kind"
-version = "19.9.1"
+version = "19.12.0"
 description = "Kubernetes test support with KIND for pytest"
 authors = ["Henning Jacobs <henning@jacobs1.de>"]
 license = "GPL-3.0+"
