@@ -7,3 +7,4 @@ fake-download
 htmlcov/
 .pytest-kind
 .kube
+.mypy_cache

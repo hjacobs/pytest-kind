@@ -1,14 +1,15 @@
-.PHONY: poetry
-poetry:
+.PHONY: install
+install:
 	poetry install
 
 .PHONY: lint
-lint: 
-	flake8
+lint: install
+	poetry run flake8
 	poetry run black --check pytest_kind
+	poetry run mypy --ignore-missing-imports pytest_kind
 
 .PHONY: test
-test: poetry lint
+test: lint
 	poetry run coverage run --source=pytest_kind -m py.test tests/
 	poetry run coverage report
 
