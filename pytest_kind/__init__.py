@@ -1,3 +1,3 @@
 from .cluster import KindCluster
 
-__all__ = [KindCluster]
+__all__ = ["KindCluster"]

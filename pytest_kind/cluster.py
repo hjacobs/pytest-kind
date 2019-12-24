@@ -8,6 +8,7 @@ import subprocess
 import sys
 import time
 from contextlib import contextmanager
+from typing import Generator
 
 from pathlib import Path
 
@@ -134,24 +135,21 @@ class KindCluster:
         *args,
         local_port: int = None,
         retries: int = 10,
-    ) -> int:
+    ) -> Generator[int, None, None]:
         """Run "kubectl port-forward" for the given service/pod and use a random local port"""
-        if local_port:
-            fixed_local_port = local_port
-        else:
-            fixed_local_port = None
+        port_to_use: int
         proc = None
         for i in range(retries):
             if proc:
                 proc.kill()
             # Linux epheremal port range starts at 32k
-            local_port = fixed_local_port or random.randrange(5000, 30000)
+            port_to_use = local_port or random.randrange(5000, 30000)
             proc = subprocess.Popen(
                 [
                     str(self.kubectl_path),
                     "port-forward",
                     service_or_pod_name,
-                    f"{local_port}:{remote_port}",
+                    f"{port_to_use}:{remote_port}",
                     *args,
                 ],
                 env={"KUBECONFIG": str(self.kubeconfig_path)},
@@ -168,16 +166,17 @@ class KindCluster:
                     continue
             s = socket.socket()
             try:
-                s.connect(("127.0.0.1", local_port))
+                s.connect(("127.0.0.1", port_to_use))
             except:
                 if i >= retries - 1:
                     raise
             finally:
                 s.close()
         try:
-            yield local_port
+            yield port_to_use
         finally:
-            proc.kill()
+            if proc:
+                proc.kill()
 
     def delete(self):
         """Delete the kind cluster ("kind delete cluster")"""
