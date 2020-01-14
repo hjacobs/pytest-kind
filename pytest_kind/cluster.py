@@ -7,14 +7,15 @@ import socket
 import subprocess
 import sys
 import time
+import yaml
 from contextlib import contextmanager
 from typing import Generator
 
 from pathlib import Path
 
 
-KIND_VERSION = "v0.6.1"
-KUBECTL_VERSION = "v1.16.3"
+KIND_VERSION = "v0.7.0"
+KUBECTL_VERSION = "v1.17.0"
 
 
 class KindCluster:
@@ -84,17 +85,15 @@ class KindCluster:
                 )
                 cluster_exists = True
 
-            self.kubeconfig_path = Path(
-                subprocess.check_output(
-                    [
-                        str(self.kind_path),
-                        "get",
-                        "kubeconfig-path",
-                        f"--name={self.name}",
-                    ],
-                    encoding="utf-8",
-                ).strip()
+            self.kubeconfig_path = self.path / f"kind-config-{self.name}"
+            kubeconfig = subprocess.check_output(
+                [str(self.kind_path), "get", "kubeconfig", f"--name={self.name}"],
+                encoding="utf-8",
             )
+            parsed = yaml.safe_load(kubeconfig)
+            assert parsed["kind"] == "Config"
+
+            self.kubeconfig_path.write_text(kubeconfig)
 
             if not self.kubeconfig_path.exists():
                 self.delete()
