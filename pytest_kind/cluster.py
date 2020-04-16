@@ -9,7 +9,7 @@ import sys
 import time
 import yaml
 from contextlib import contextmanager
-from typing import Generator
+from typing import Generator, Union
 
 from pathlib import Path
 
@@ -63,7 +63,7 @@ class KindCluster:
             tmp_file.chmod(0o755)
             tmp_file.rename(self.kubectl_path)
 
-    def create(self):
+    def create(self, config_file: Union[str, Path] = None):
         """Create the kind cluster if it does not exist (otherwise re-use)"""
         self.ensure_kind()
 
@@ -78,11 +78,18 @@ class KindCluster:
                     cluster_exists = True
 
             if not cluster_exists:
+                create_cmd = [
+                    str(self.kind_path),
+                    "create",
+                    "cluster",
+                    f"--name={self.name}",
+                ]
+
+                if config_file:
+                    create_cmd += ["--config", str(config_file)]
+
                 logging.info(f"Creating cluster {self.name}..")
-                subprocess.run(
-                    [str(self.kind_path), "create", "cluster", f"--name={self.name}"],
-                    check=True,
-                )
+                subprocess.run(create_cmd, check=True)
                 cluster_exists = True
 
             self.kubeconfig_path = self.path / f"kind-config-{self.name}"
