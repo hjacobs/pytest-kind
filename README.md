@@ -9,7 +9,7 @@
 Test your Python Kubernetes app/operator end-to-end with [kind](https://kind.sigs.k8s.io/) and [pytest](https://pytest.org).
 
 `pytest-kind` is a plugin for pytest which provides the `kind_cluster` fixture.
-The fixture will install kind 0.7.0, create a Kubernetes 1.17 cluster, and provide convenience functionality such as port forwarding.
+The fixture will install kind 0.8.0, create a Kubernetes 1.18 cluster, and provide convenience functionality such as port forwarding.
 
 
 ## Usage
@@ -24,7 +24,7 @@ Write your pytest functions and use the provided `kind_cluster` fixture, e.g.:
 
 ```python
 def test_kubernetes_version(kind_cluster):
-    assert kind_cluster.api.version == ('1', '17')
+    assert kind_cluster.api.version == ('1', '18')
 ```
 
 To load your custom Docker image and apply deployment manifests:
