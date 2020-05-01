@@ -7,10 +7,10 @@ def test_kind_cluster(testdir):
     import socket
 
     def test_cluster_api(kind_cluster):
-        assert kind_cluster.api.version == ('1', '17')
+        assert kind_cluster.api.version == ('1', '18')
 
     def test_kubectl_version(kind_cluster):
-        assert "v1.17" in kind_cluster.kubectl("version")
+        assert "v1.18" in kind_cluster.kubectl("version")
 
     def test_load_docker_image(kind_cluster):
         kind_cluster.load_docker_image("busybox")
