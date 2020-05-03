@@ -14,7 +14,7 @@ from typing import Generator, Union
 from pathlib import Path
 
 
-KIND_VERSION = "v0.8.0"
+KIND_VERSION = "v0.8.1"
 KUBECTL_VERSION = "v1.18.2"
 
 
